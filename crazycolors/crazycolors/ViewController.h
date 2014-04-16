@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController {
+    
+    NSMutableArray *arrayQueueObjects;
+}
 
 @property(nonatomic, retain) IBOutletCollection(UIButton) NSArray *arrayPalette;
+@property(nonatomic, retain) IBOutletCollection(UIButton) NSArray *arrayQueue;
 
 @end

@@ -18,6 +18,7 @@
 - (void)viewDidLoad
 {
     [self loadRandomPalette];
+    arrayQueueObjects = [[NSMutableArray alloc] init];
     
     self.view.backgroundColor = [UIColor getRandomColor];
 }
@@ -48,8 +49,27 @@
                      completion:
      ^(BOOL finished)
      {
+         if ([arrayQueueObjects count]>2) {
+             
+             [arrayQueueObjects removeObjectAtIndex:0];
+         }
          
+         [arrayQueueObjects addObject:[(UIButton *)sender backgroundColor]];
+         [self updateQueue];
      }];
+}
+
+- (void)updateQueue
+{
+    int buttonIndex = 0;
+    for (UIButton *aButton in _arrayQueue) {
+        
+        if (arrayQueueObjects.count > buttonIndex) {
+            
+            [aButton setBackgroundColor:[arrayQueueObjects objectAtIndex:buttonIndex]];
+        }
+        buttonIndex++;
+    }
 }
 
 @end
