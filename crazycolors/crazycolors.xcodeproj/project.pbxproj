@@ -21,6 +21,8 @@
 		C1CCF4EB18FF0F9F00D1CBE4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1CCF4CD18FF0F9F00D1CBE4 /* UIKit.framework */; };
 		C1CCF4F318FF0F9F00D1CBE4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1CCF4F118FF0F9F00D1CBE4 /* InfoPlist.strings */; };
 		C1CCF4F518FF0F9F00D1CBE4 /* crazycolorsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CCF4F418FF0F9F00D1CBE4 /* crazycolorsTests.m */; };
+		C1CCF50418FF167A00D1CBE4 /* UIColor+UIColor_Extended.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CCF50318FF167A00D1CBE4 /* UIColor+UIColor_Extended.m */; };
+		C1CCF50718FF271400D1CBE4 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CCF50618FF271400D1CBE4 /* Utils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		C1CCF4F018FF0F9F00D1CBE4 /* crazycolorsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "crazycolorsTests-Info.plist"; sourceTree = "<group>"; };
 		C1CCF4F218FF0F9F00D1CBE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C1CCF4F418FF0F9F00D1CBE4 /* crazycolorsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = crazycolorsTests.m; sourceTree = "<group>"; };
+		C1CCF50218FF167A00D1CBE4 /* UIColor+UIColor_Extended.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColor_Extended.h"; sourceTree = "<group>"; };
+		C1CCF50318FF167A00D1CBE4 /* UIColor+UIColor_Extended.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColor_Extended.m"; sourceTree = "<group>"; };
+		C1CCF50518FF271400D1CBE4 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		C1CCF50618FF271400D1CBE4 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,8 @@
 		C1CCF4CF18FF0F9F00D1CBE4 /* crazycolors */ = {
 			isa = PBXGroup;
 			children = (
+				C1CCF4FE18FF165900D1CBE4 /* resources */,
+				C1CCF4FF18FF165900D1CBE4 /* sources */,
 				C1CCF4D818FF0F9F00D1CBE4 /* AppDelegate.h */,
 				C1CCF4D918FF0F9F00D1CBE4 /* AppDelegate.m */,
 				C1CCF4DB18FF0F9F00D1CBE4 /* Main.storyboard */,
@@ -150,6 +158,40 @@
 				C1CCF4F118FF0F9F00D1CBE4 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C1CCF4FE18FF165900D1CBE4 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		C1CCF4FF18FF165900D1CBE4 /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				C1CCF50018FF165900D1CBE4 /* categories */,
+				C1CCF50118FF165900D1CBE4 /* utils */,
+			);
+			path = sources;
+			sourceTree = "<group>";
+		};
+		C1CCF50018FF165900D1CBE4 /* categories */ = {
+			isa = PBXGroup;
+			children = (
+				C1CCF50218FF167A00D1CBE4 /* UIColor+UIColor_Extended.h */,
+				C1CCF50318FF167A00D1CBE4 /* UIColor+UIColor_Extended.m */,
+			);
+			path = categories;
+			sourceTree = "<group>";
+		};
+		C1CCF50118FF165900D1CBE4 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				C1CCF50518FF271400D1CBE4 /* Utils.h */,
+				C1CCF50618FF271400D1CBE4 /* Utils.m */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,6 +293,8 @@
 			files = (
 				C1CCF4E018FF0F9F00D1CBE4 /* ViewController.m in Sources */,
 				C1CCF4DA18FF0F9F00D1CBE4 /* AppDelegate.m in Sources */,
+				C1CCF50418FF167A00D1CBE4 /* UIColor+UIColor_Extended.m in Sources */,
+				C1CCF50718FF271400D1CBE4 /* Utils.m in Sources */,
 				C1CCF4D618FF0F9F00D1CBE4 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
