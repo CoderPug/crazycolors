@@ -9,10 +9,6 @@
 #import "ViewController.h"
 #import "UIColor+UIColor_Extended.h"
 
-static NSString *kPubNubPublishKey = @"pub-c-ae8c55a7-a336-4beb-a9fa-4db8dadd742e";
-static NSString *kPubNubSubscribeKey = @"sub-c-dd51faf4-b5dc-11e3-85fc-02ee2ddab7fe";
-static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBmNGQ4ZWI5NWJl";
-
 @interface ViewController () {
     
     PNChannel *channel;
@@ -25,34 +21,28 @@ static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBm
 - (void)viewDidLoad
 {
     [self loadRandomPalette];
+
     arrayQueueObjects = [[NSMutableArray alloc] init];
     
     self.view.backgroundColor = [UIColor getRandomColor];
- 
+    [self sendChangeOfColor:[UIColor getRandomColor]];
+    
     [self setUpNotifications];
     [self setUpPubNub];
 }
 
 - (void)setUpNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(colorPaletteHasBeenSelected:)
-                                                 name:kChannelIdentifier_CrazyColors
-                                               object:nil];
+    [[PNObservationCenter defaultCenter] addMessageReceiveObserver:self
+                                                         withBlock:^(PNMessage *message)
+    {
+        [self colorPaletteHasBeenSelected:message];
+    }];
 }
 
 - (void)setUpPubNub
 {
-    [PubNub setClientIdentifier:@"CrazyColors"];
-    
-    [PubNub setConfiguration:
-     [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
-                                  publishKey:kPubNubPublishKey
-                                subscribeKey:kPubNubSubscribeKey
-                                   secretKey:kPubNubSecretKey]];
-    [PubNub connect];
-    
-    channel = [PNChannel channelWithName:@"my_channel"
+    channel = [PNChannel channelWithName:kChannelIdentifier_CrazyColors
                    shouldObservePresence:NO];
     [PubNub subscribeOnChannel:channel];
 }
@@ -75,37 +65,64 @@ static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBm
 
 - (IBAction)paletteButtonTouchUpInside:(id)sender
 {
-    [UIView animateWithDuration:0.2 animations:
-     ^{
-         self.view.backgroundColor = [UIColor mixColors:@[self.view.backgroundColor,
-                                                          [(UIButton *)sender backgroundColor]]];
-     }
-                     completion:
-     ^(BOOL finished)
-     {
-         if ([arrayQueueObjects count]>2) {
-             
-             [arrayQueueObjects removeObjectAtIndex:0];
-         }
-         
-         [arrayQueueObjects addObject:[(UIButton *)sender backgroundColor]];
-         [self updateQueue];
-         
-         [PubNub sendMessage:[NSString stringWithFormat:@"%@",self.view.backgroundColor]
-                   toChannel:channel];
-     }];
+    UIColor *receivedColor = [(UIButton *)sender backgroundColor];
+    [self sendChangeOfColor:receivedColor];
+}
+
+- (void)sendChangeOfColor:(UIColor *)color
+{
+    CGFloat colorRedA, colorGreenA, colorBlueA, alphaA;
+    CGFloat colorRedB, colorGreenB, colorBlueB, alphaB;
+    
+    [self.view.backgroundColor getRed:&colorRedA green:&colorGreenA blue:&colorBlueA alpha:&alphaA];
+    [color getRed:&colorRedB green:&colorGreenB blue:&colorBlueB alpha:&alphaB];
+    
+    NSDictionary *dictionaryColor = @{@"currentColor":@{@"red":[NSString stringWithFormat:@"%.6f",colorRedA],
+                                                        @"green":[NSString stringWithFormat:@"%.6f",colorGreenA],
+                                                        @"blue":[NSString stringWithFormat:@"%.6f",colorBlueA]},
+                                      
+                                      @"nextColor":@{@"red":[NSString stringWithFormat:@"%.6f",colorRedB],
+                                                     @"green":[NSString stringWithFormat:@"%.6f",colorGreenB],
+                                                     @"blue":[NSString stringWithFormat:@"%.6f",colorBlueB]}};
+    
+    [PubNub sendMessage:dictionaryColor toChannel:channel];
 }
 
 - (IBAction)colorPaletteHasBeenSelected:(id)sender
 {
-    
     PNMessage *receivedMessage = (PNMessage *)sender;
-    UIColor *receivedColor = (UIColor *)[receivedMessage message];
+    NSDictionary *dictionaryCurrentColor = [(NSDictionary *)[receivedMessage message] objectForKey:@"currentColor"];
+    NSDictionary *dictionaryNextColor = [(NSDictionary *)[receivedMessage message] objectForKey:@"nextColor"];
     
+    CGFloat colorRedA = [[dictionaryCurrentColor objectForKey:@"red"] floatValue];
+    CGFloat colorGreenA = [[dictionaryCurrentColor objectForKey:@"green"] floatValue];
+    CGFloat colorBlueA = [[dictionaryCurrentColor objectForKey:@"blue"] floatValue];
+    
+    UIColor *colorCurrent = [UIColor colorWithRed:colorRedA
+                                             green:colorGreenA
+                                              blue:colorBlueA
+                                             alpha:1.0];
+    
+    self.view.backgroundColor = colorCurrent;
+    
+    CGFloat colorRedB = [[dictionaryNextColor objectForKey:@"red"] floatValue];
+    CGFloat colorGreenB = [[dictionaryNextColor objectForKey:@"green"] floatValue];
+    CGFloat colorBlueB = [[dictionaryNextColor objectForKey:@"blue"] floatValue];
+    
+    UIColor *colorNext = [UIColor colorWithRed:colorRedB
+                                             green:colorGreenB
+                                              blue:colorBlueB
+                                             alpha:1.0];
+    
+    [self changeBackgroundColor:colorNext];
+}
+
+- (void)changeBackgroundColor:(UIColor *)color
+{
     [UIView animateWithDuration:0.2 animations:
      ^{
          self.view.backgroundColor = [UIColor mixColors:@[self.view.backgroundColor,
-                                                          receivedColor]];
+                                                          color]];
      }
                      completion:
      ^(BOOL finished)
@@ -115,7 +132,7 @@ static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBm
              [arrayQueueObjects removeObjectAtIndex:0];
          }
          
-         [arrayQueueObjects addObject:receivedColor];
+         [arrayQueueObjects addObject:color];
          [self updateQueue];
      }];
 }

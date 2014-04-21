@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 static NSString *kChannelIdentifier_CrazyColors = @"crazycolors-channel";
-
 static NSString *kNotificationIdentifier_ColorHasChange = @"colorhaschange";
 
 @interface Utils : NSObject

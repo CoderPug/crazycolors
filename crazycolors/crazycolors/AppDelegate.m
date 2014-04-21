@@ -7,13 +7,26 @@
 //
 
 #import "AppDelegate.h"
+#import "PNImports.h"
+
+static NSString *kPubNubPublishKey = @"pub-c-ae8c55a7-a336-4beb-a9fa-4db8dadd742e";
+static NSString *kPubNubSubscribeKey = @"sub-c-dd51faf4-b5dc-11e3-85fc-02ee2ddab7fe";
+static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBmNGQ4ZWI5NWJl";
+static NSString *kClientIdentifier = @"CrazyColors";
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    PNConfiguration *pubnubConfiguration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                        publishKey:kPubNubPublishKey
+                                                                      subscribeKey:kPubNubSubscribeKey
+                                                                         secretKey:kPubNubSecretKey];
     [PubNub setDelegate:self];
-    
+    [PubNub setClientIdentifier:kClientIdentifier];
+    [PubNub setConfiguration:pubnubConfiguration];
+    [PubNub connect];
+
     return YES;
 }
 
@@ -47,11 +60,7 @@
 #pragma mark PubNubDelegate
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
- 
-    if ([[[message channel] name] isEqualToString:kChannelIdentifier_CrazyColors]) {
-     
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationIdentifier_ColorHasChange object:message];
-    }
+        
 }
 
 @end
