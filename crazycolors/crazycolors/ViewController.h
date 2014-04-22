@@ -13,6 +13,7 @@
     NSMutableArray *arrayQueueObjects;
 }
 
+@property(nonatomic, retain) IBOutlet UILabel *labelParticipantsCount;
 @property(nonatomic, retain) IBOutletCollection(UIButton) NSArray *arrayPalette;
 @property(nonatomic, retain) IBOutletCollection(UIButton) NSArray *arrayQueue;
 

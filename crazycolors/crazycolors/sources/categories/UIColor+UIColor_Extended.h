@@ -11,6 +11,7 @@
 @interface UIColor (UIColor_Extended)
 
 + (UIColor *)getRandomColor;
-+ (UIColor *)mixColors:(NSArray*)arrayOfColors;
++ (UIColor *)mixColors:(NSArray *)arrayOfColors;
++ (UIColor *)getColorFromDictionary:(NSDictionary *)dictionary;
 
 @end

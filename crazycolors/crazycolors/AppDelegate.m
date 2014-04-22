@@ -22,6 +22,8 @@ static NSString *kClientIdentifier = @"CrazyColors";
                                                                         publishKey:kPubNubPublishKey
                                                                       subscribeKey:kPubNubSubscribeKey
                                                                          secretKey:kPubNubSecretKey];
+    [pubnubConfiguration setPresenceHeartbeatInterval:1];
+    
     [PubNub setDelegate:self];
     [PubNub setClientIdentifier:kClientIdentifier];
     [PubNub setConfiguration:pubnubConfiguration];

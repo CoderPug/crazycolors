@@ -19,7 +19,7 @@
     return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1.0];
 }
 
-+ (UIColor*)mixColors:(NSArray*)arrayOfColors
++ (UIColor*)mixColors:(NSArray *)arrayOfColors
 {
     UIColor *resultColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
     CGFloat c1, c2, c3, c1Total, c2Total, c3Total, notUsed;
@@ -47,6 +47,19 @@
     resultColor = [UIColor colorWithRed:c1 green:c2 blue:c3 alpha:1.0];
     
     return resultColor;
+}
+
++ (UIColor *)getColorFromDictionary:(NSDictionary *)dictionary
+{
+    CGFloat colorRed = [[dictionary objectForKey:@"red"] floatValue];
+    CGFloat colorGreen = [[dictionary objectForKey:@"green"] floatValue];
+    CGFloat colorBlue = [[dictionary objectForKey:@"blue"] floatValue];
+    
+    UIColor *color = [UIColor colorWithRed:colorRed
+                                     green:colorGreen
+                                      blue:colorBlue
+                                     alpha:1.0];
+    return color;
 }
 
 @end

@@ -24,8 +24,28 @@
 
     arrayQueueObjects = [[NSMutableArray alloc] init];
     
-    self.view.backgroundColor = [UIColor getRandomColor];
-    [self sendChangeOfColor:[UIColor getRandomColor]];
+    [PubNub requestHistoryForChannel:[PNChannel channelWithName:kChannelIdentifier_CrazyColors]
+                                from:nil
+                                  to:nil
+                               limit:3
+                      reverseHistory:NO
+                 withCompletionBlock:^(NSArray *pMessages, PNChannel *pChannel, PNDate *pBeginDate, PNDate *pEndDate, PNError *pError)
+    {
+        if (pMessages && pMessages.count > 0) {
+            
+            NSMutableArray *temporalMessagesArray = [NSMutableArray arrayWithArray:pMessages];
+            [temporalMessagesArray removeLastObject];
+            [self updateQueueWithArray:temporalMessagesArray];
+            
+            [self colorPaletteHasBeenSelected:[pMessages lastObject]];
+            
+        } else {
+            
+            self.view.backgroundColor = [UIColor getRandomColor];
+            [self sendChangeOfColor:[UIColor getRandomColor]];
+        }
+        
+    }];
     
     [self setUpNotifications];
     [self setUpPubNub];
@@ -34,10 +54,26 @@
 - (void)setUpNotifications
 {
     [[PNObservationCenter defaultCenter] addMessageReceiveObserver:self
-                                                         withBlock:^(PNMessage *message)
+                                                         withBlock:
+     ^(PNMessage *message)
     {
         [self colorPaletteHasBeenSelected:message];
     }];
+    
+    [[PNObservationCenter defaultCenter] addPresenceEventObserver:self
+                                                        withBlock:
+     ^(PNPresenceEvent *event)
+     {
+
+     }];
+    
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self
+                                                        withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError) {
+                                                            
+                                                            _labelParticipantsCount.text = [NSString stringWithFormat:@"%ld",channel.participantsCount];
+                                                           
+                                                        }];
 }
 
 - (void)setUpPubNub
@@ -45,6 +81,7 @@
     channel = [PNChannel channelWithName:kChannelIdentifier_CrazyColors
                    shouldObservePresence:NO];
     [PubNub subscribeOnChannel:channel];
+    [PubNub enablePresenceObservationForChannel:channel];
 }
 
 - (void)loadRandomPalette
@@ -94,27 +131,8 @@
     NSDictionary *dictionaryCurrentColor = [(NSDictionary *)[receivedMessage message] objectForKey:@"currentColor"];
     NSDictionary *dictionaryNextColor = [(NSDictionary *)[receivedMessage message] objectForKey:@"nextColor"];
     
-    CGFloat colorRedA = [[dictionaryCurrentColor objectForKey:@"red"] floatValue];
-    CGFloat colorGreenA = [[dictionaryCurrentColor objectForKey:@"green"] floatValue];
-    CGFloat colorBlueA = [[dictionaryCurrentColor objectForKey:@"blue"] floatValue];
-    
-    UIColor *colorCurrent = [UIColor colorWithRed:colorRedA
-                                             green:colorGreenA
-                                              blue:colorBlueA
-                                             alpha:1.0];
-    
-    self.view.backgroundColor = colorCurrent;
-    
-    CGFloat colorRedB = [[dictionaryNextColor objectForKey:@"red"] floatValue];
-    CGFloat colorGreenB = [[dictionaryNextColor objectForKey:@"green"] floatValue];
-    CGFloat colorBlueB = [[dictionaryNextColor objectForKey:@"blue"] floatValue];
-    
-    UIColor *colorNext = [UIColor colorWithRed:colorRedB
-                                             green:colorGreenB
-                                              blue:colorBlueB
-                                             alpha:1.0];
-    
-    [self changeBackgroundColor:colorNext];
+    self.view.backgroundColor = [UIColor getColorFromDictionary:dictionaryCurrentColor];
+    [self changeBackgroundColor:[UIColor getColorFromDictionary:dictionaryNextColor]];
 }
 
 - (void)changeBackgroundColor:(UIColor *)color
@@ -148,6 +166,19 @@
         }
         buttonIndex++;
     }
+}
+
+- (void)updateQueueWithArray:(NSArray *)arrayMessages
+{
+    for (PNMessage *message in arrayMessages) {
+        
+        if ([arrayQueueObjects count]>2) {
+            
+            [arrayQueueObjects removeObjectAtIndex:0];
+        }
+        [arrayQueueObjects addObject:[UIColor getColorFromDictionary:[[message message] objectForKey:@"nextColor"]]];
+    }
+    [self updateQueue];
 }
 
 @end
