@@ -51,6 +51,15 @@
     [self setUpPubNub];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [PubNub requestParticipantsListForChannel:[PNChannel channelWithName:kChannelIdentifier_CrazyColors]
+                          withCompletionBlock:^(NSArray *pArray, PNChannel *pChannel, PNError *pError)
+     {
+         _labelParticipantsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)pArray.count];
+     }];
+}
+
 - (void)setUpNotifications
 {
     [[PNObservationCenter defaultCenter] addMessageReceiveObserver:self
@@ -64,8 +73,7 @@
                                                         withBlock:
      ^(PNPresenceEvent *event)
      {
-         _labelParticipantsCount.text = [NSString stringWithFormat:@"%d",event.channel.participantsCount];
-         
+         _labelParticipantsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)event.channel.participantsCount];
      }];
         
 }
