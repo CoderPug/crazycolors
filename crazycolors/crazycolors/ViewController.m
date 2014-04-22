@@ -64,22 +64,16 @@
                                                         withBlock:
      ^(PNPresenceEvent *event)
      {
-
+         _labelParticipantsCount.text = [NSString stringWithFormat:@"%d",event.channel.participantsCount];
+         
      }];
-    
-    
-    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self
-                                                        withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError) {
-                                                            
-                                                            _labelParticipantsCount.text = [NSString stringWithFormat:@"%ld",channel.participantsCount];
-                                                           
-                                                        }];
+        
 }
 
 - (void)setUpPubNub
 {
     channel = [PNChannel channelWithName:kChannelIdentifier_CrazyColors
-                   shouldObservePresence:NO];
+                   shouldObservePresence:YES];
     [PubNub subscribeOnChannel:channel];
     [PubNub enablePresenceObservationForChannel:channel];
 }

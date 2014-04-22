@@ -12,20 +12,28 @@
 static NSString *kPubNubPublishKey = @"pub-c-ae8c55a7-a336-4beb-a9fa-4db8dadd742e";
 static NSString *kPubNubSubscribeKey = @"sub-c-dd51faf4-b5dc-11e3-85fc-02ee2ddab7fe";
 static NSString *kPubNubSecretKey = @"sec-c-MmQxYzg0YTYtYzg0MC00MzEzLThhMzgtZjBmNGQ4ZWI5NWJl";
-static NSString *kClientIdentifier = @"CrazyColors";
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    NSString *UUID = [[NSUserDefaults standardUserDefaults] objectForKey:@"DeviceUUID"];
+    
+    if (!UUID) {
+        
+        UUID = [[NSUUID UUID] UUIDString];
+        [[NSUserDefaults standardUserDefaults] setObject:UUID forKey:@"DeviceUUID"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     PNConfiguration *pubnubConfiguration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
                                                                         publishKey:kPubNubPublishKey
                                                                       subscribeKey:kPubNubSubscribeKey
                                                                          secretKey:kPubNubSecretKey];
-    [pubnubConfiguration setPresenceHeartbeatInterval:1];
-    
     [PubNub setDelegate:self];
-    [PubNub setClientIdentifier:kClientIdentifier];
+    [PubNub setClientIdentifier:UUID];
+    [pubnubConfiguration setPresenceHeartbeatInterval:2];
     [PubNub setConfiguration:pubnubConfiguration];
     [PubNub connect];
 

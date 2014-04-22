@@ -42,22 +42,6 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "crazycolors/ViewController.m"
-            timestampString = "419837817.21134"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "-setUpNotifications"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "crazycolors/ViewController.m"
             timestampString = "419837856.609369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -74,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "crazycolors/ViewController.m"
-            timestampString = "419839090.738758"
+            timestampString = "419840953.007382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
             landmarkName = "-setUpNotifications"
             landmarkType = "5">
          </BreakpointContent>
