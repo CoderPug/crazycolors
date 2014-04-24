@@ -23,7 +23,7 @@
 {
     UIColor *resultColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
     CGFloat c1, c2, c3, c1Total, c2Total, c3Total, notUsed;
-    int count = [arrayOfColors count];
+    NSInteger count = [arrayOfColors count];
     
     if (count == 0)
         return resultColor;
